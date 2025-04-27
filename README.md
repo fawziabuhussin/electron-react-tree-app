@@ -1,7 +1,8 @@
+
 # TreeBuilder 2025 _(Electron + React Flow)_
 
 **منشئ الشجرة 2025** is a modern desktop tool for creating, editing, and exporting hierarchical trees.  
-It is built with **Electron 25**, **React 18**, **Vite 5**, and **React-Flow 11** and runs on **Windows** and **macOS** (Intel + Apple Silicon).
+Built with **Electron 25**, **React 18**, **Vite 5**, and **React-Flow 11**—runs on **Windows** & **macOS** (Intel + Apple Silicon).
 
 ---
 
@@ -9,66 +10,72 @@ It is built with **Electron 25**, **React 18**, **Vite 5**, and **React-Flow 11*
 | | |
 |---|---|
 | **Visual tree editor** | Drag-friendly canvas, custom nodes, collapse / expand, mini-map & grid |
-| **Multi-language UI**  | Instant switch between **Arabic** & **English** (add your own strings in `strings.js`) |
-| **Color picker**       | Swatches + HEX picker (react-colorful) |
-| **Export**             | Save tree as **PNG**, **PDF**, or **JSON** |
-| **Portable build**     | Single-file `.exe` for Windows, signed/notarised `.dmg` for macOS (optional) |
+| **Multi-language UI**  | Instant switch between **Arabic ↔ English** (add more in `strings.js`) |
+| **Color picker**       | Swatches **+** HEX picker (react-colorful) |
+| **Export**             | Save tree as **PNG**, **PDF** or **JSON** |
+| **Portable build**     | Single-file `.exe` (Win) & notarised `.dmg` (Mac) generated locally |
 
 ---
 
-## ⚡ Quick start (for developers)
+## ⚡ Quick start (for developers)
 
 ```bash
-git clone https://github.com/YourName/electron-react-tree-app.git
+git clone https://github.com/fawziabuhussin/electron-react-tree-app.git
 cd electron-react-tree-app
-npm install         # ⏳  installs all dependencies
+npm install               # ⏳  installs dependencies
 
-# 1️⃣  React / Vite dev-server on http://localhost:3000
-npm run dev
+# 1️⃣  React / Vite dev-server
+npm run dev               # http://localhost:3000
 
-# 2️⃣  (in another terminal) open Electron window using that dev server
+# 2️⃣  In another terminal: start Electron
 npm start
 ```
 
-*Reload* app: **Ctrl + R**  Open DevTools: **Ctrl + Shift + I**
+Reload window **Ctrl + R**  Open DevTools **Ctrl + Shift + I**
 
 ---
 
 ## 🏗️ Build a desktop release
 
 ```bash
-# Cleans old artefacts (PowerShell)
+# clean previous artefacts (PowerShell)
 Remove-Item dist,release -Recurse -Force
-# or (bash/zsh):  rm -rf dist release
+# bash/zsh:  rm -rf dist release
 
-# Builds renderer (Vite) → packs with electron-builder
-npm run build
+# build renderer & package installers
+npm run build             # = vite build  ➜  dist/
+npm run electron:make     # = electron-builder ➜ release/
 ```
 
-### Where do the installers end up?
+### Resulting files (`release/`)
 
-| OS      | Output files (in `release/`)                       | Notes |
-|---------|----------------------------------------------------|-------|
-| Windows | `TreeBuilder2025-0.x.x-x64.exe` <br> `…-ia32.exe`  | Portable, no install needed |
-| macOS   | `TreeBuilder2025-0.x.x-arm64.dmg` <br> `…-x64.dmg` | Unsigned for testing; notarise for public distribution |
-| macOS   | `TreeBuilder2025-0.x.x-*.zip` _(optional)_         | Same app, zipped |
+| OS      | Generated artefacts                      | How to run |
+|---------|------------------------------------------|------------|
+| **Windows** | `TreeBuilder2025-x64.exe` <br> `TreeBuilder2025-ia32.exe` | double-click (portable) |
+| **macOS**   | `TreeBuilder2025-arm64.dmg` <br> `TreeBuilder2025-x64.dmg` | mount DMG and drag app to /Applications |
+| **Linux** *(if enabled)* | `TreeBuilder2025.AppImage` | `chmod +x` then `./TreeBuilder2025.AppImage` |
 
-> **Tip:** macOS builds **must** be compiled on macOS (or a macOS CI runner) to enable signing/notarisation.
+> macOS builds **must** be created on macOS to enable code-sign & notarisation.
+
+**Distribute installers via _GitHub Releases_:**  
+create a new release → drag files from `release/` → publish.  
+Users download from the Releases page—your repository stays small.
 
 ---
 
-## 📦 Download ready-made builds
+## 📦 Running without installers
 
-Latest binaries are always in **GitHub Releases**:
+If you just need to check the packaged app locally:
 
-| Platform | Download |
-|----------|----------|
-| Windows (x64) Portable | [TreeBuilder2025-Win-x64.exe](https://github.com/fawziabuhussin/electron-react-tree-app/releases/latest) |
-| Windows (32-bit) Portable | [TreeBuilder2025-Win-ia32.exe](https://github.com/fawziabuhussin/electron-react-tree-app/releases/latest) |
-| macOS (Apple Silicon) DMG | [TreeBuilder2025-macOS-arm64.dmg](https://github.com/fawziabuhussin/electron-react-tree-app/releases/latest) |
-| macOS (Intel) DMG | [TreeBuilder2025-macOS-x64.dmg](https://github.com/fawziabuhussin/electron-react-tree-app/releases/latest) |
+```bash
+# Windows
+.\release\win-unpacked\TreeBuilder2025.exe
 
-> ⚠️ If Gatekeeper blocks the app, open **System Settings → Privacy & Security → Open Anyway** (or notarise & sign to avoid this).
+# macOS
+open release/mac-x64/TreeBuilder2025.app   # or arm64/
+```
+
+*(No install step; useful for QA before publishing.)*
 
 ---
 
@@ -77,27 +84,27 @@ Latest binaries are always in **GitHub Releases**:
 ```
 src/
   renderer/
-    App.jsx           # main UI
+    App.jsx            # main UI
     CustomNode.jsx
-    strings.js        # i18n dictionaries
+    strings.js         # i18n dictionaries
     style.css
-  main.js             # Electron main process
+  main.js              # Electron main process
   preload.js
-assets/               # icons (.png, .icns)
-dist/                 # Vite build output (ignored in Git)
-release/              # Installers / portable builds
+assets/                # icons (.png, .icns)
+dist/                  # Vite build output  (ignored)
+release/               # Installers / portable builds  (ignored)
 ```
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork / branch, run **`npm run dev`**.
-2. Follow ESLint / Prettier rules.
-3. Commit with clear messages & open a PR — shukran!
+1. Fork / branch → **`npm run dev`**  
+2. Follow ESLint / Prettier rules  
+3. Commit with clear messages & open a PR — شكرًا!
 
 ---
 
 ## 📄 License
 
-MIT ― _do whatever you want, just keep the copyright notice._
+MIT ― do whatever you like, just retain the copyright notice.
